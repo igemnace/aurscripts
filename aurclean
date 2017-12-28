@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echoerr() {
+  1>&2 echo aurclean: "$@"
+}
+
+for package in "$@"; do
+  cd "${AUR_DIR:-$HOME/Downloads/AUR}/$package" || { echoerr Aborting.; break; }
+  git clean -fxfd || { echoerr Aborting.; break; }
+done

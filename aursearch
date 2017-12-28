@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+curl -s "https://aur.archlinux.org/rpc/?v=5&type=search&arg=$1" |
+  jq -r '.results | map(.Name + " " + .Version, "    " + .Description) | .[]'
