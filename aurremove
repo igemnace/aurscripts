@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echoerr() {
+  1>&2 echo aurremove: "$@"
+}
+
+cd "${AUR_DIR:-$HOME/Downloads/AUR}" || { echoerr Cannot chdir to AUR_DIR. Aborting.; exit 1; }
+
+for package in "$@"; do
+  echoerr "Removing $package..."
+  rm -rf "$package" || { echoerr "Skipping $package."; break; }
+done
