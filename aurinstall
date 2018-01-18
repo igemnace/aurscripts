@@ -34,8 +34,8 @@ for package in "${packages[@]}"; do
   echoerr Running makepkg...
   if ((asdeps)); then
     echoerr --asdeps flag provided. Installing as dependency...
-    makepkg -sic --asdeps
+    makepkg -rics --asdeps
   else
-    makepkg -sic
+    makepkg -rics
   fi
 done
