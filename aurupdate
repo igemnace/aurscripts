@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+echoerr() {
+  1>&2 echo aurupdate: "$@"
+}
+
+silent=0
+packages=()
+
+while (( $# )); do
+  case "$1" in
+    -s|--silent)
+      silent=1
+      ;;
+    *)
+      packages+=("$1")
+  esac
+  shift
+done
+
+for package in "${packages[@]}"; do
+  echoerr "Updating $package..."
+  (
+    cd "${AUR_DIR:-$HOME/Downloads/AUR}/$package" || {
+      echoerr Cannot chdir. Aborting.
+      break
+    }
+
+    git pull || {
+      echoerr "Update failed for $package. Cleaning up..."
+      git merge --abort
+      break
+    }
+
+    if ! (( $silent )); then
+      git log --oneline @{1}..@
+    fi
+  )
+done
