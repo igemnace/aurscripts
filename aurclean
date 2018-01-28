@@ -5,6 +5,7 @@ echoerr() {
 }
 
 for package in "$@"; do
+  echoerr "Cleaning up $package..."
   cd "${AUR_DIR:-$HOME/Downloads/AUR}/$package" || { echoerr Aborting.; break; }
   git clean -fxfd || { echoerr Aborting.; break; }
 done
