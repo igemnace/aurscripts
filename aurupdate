@@ -26,14 +26,16 @@ for package in "${packages[@]}"; do
       break
     }
 
-    git pull || {
+    git fetch || { echoerr Aborting.; break; }
+
+    if ! (( $silent )); then
+      git log --oneline @..@{u}
+    fi
+
+    git merge || {
       echoerr "Update failed for $package. Cleaning up..."
       git merge --abort
       break
     }
-
-    if ! (( $silent )); then
-      git log --oneline @{1}..@
-    fi
   )
 done
