@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
 
+# do not emit color codes if stdout is not a tty
+! [[ -t 1 ]] && nocolor=1
+
 curl -s "https://aur.archlinux.org/rpc/?v=5&type=search&arg=$1" |
-  jq -r '.results | map(.Name + " " + .Version, "    " + .Description) | .[]'
+  jq -r '.results | sort_by(.Name) | map(.Name + ";" + .Version + ";" + .Description) | .[]' |
+  while IFS=';' read -r name version description; do
+    if (( $nocolor )); then
+      printf '%s %s\n    %s\n' "$name" "$version" "$description"
+    else
+      bold=$(tput bold)
+      normal=$(tput sgr0)
+      green=$(tput setaf 2)
+
+      printf '%s%s %s%s%s\n    %s\n' "$bold" "$name" "$green" "$version" "$normal" "$description"
+    fi
+  done
