@@ -21,7 +21,7 @@ done
 for package in "${packages[@]}"; do
   echoerr "Updating $package..."
   (
-    cd "${AUR_DIR:-$HOME/Downloads/AUR}/$package" || {
+    cd "${AUR_DIR:-$HOME/.aur}/$package" || {
       echoerr Cannot chdir. Aborting.
       break
     }

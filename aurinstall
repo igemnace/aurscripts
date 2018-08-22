@@ -26,7 +26,7 @@ done
 
 for package in "${packages[@]}"; do
   echoerr "Installing $package..."
-  cd "${AUR_DIR:-$HOME/Downloads/AUR}/$package" || { echoerr Aborting.; break; }
+  cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
 
   echoerr Inspecting PKGBUILD...
   pager PKGBUILD || { echoerr Aborting.; break; }
