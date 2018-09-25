@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+url_prefix='https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
+jqprog='.results[0] | .Name, .Version, .Description, .URL,
+(.License, .Provides, .Depends, .MakeDepends,
+.OptDepends, .Conflicts, .Replaces |
+	. // [] | join(" "))'
+keys=(Name Version Description URL Licenses Provides 'Depends On'
+	'Make Deps' 'Optional Deps' 'Conflicts With' 'Replaces')
+
+nocolor=0
+packages=()
+
+# do not emit color codes if stdout is not a tty
+! [[ -t 1 ]] && nocolor=1
+
+while (( $# )); do
+	case $1 in
+		-C|--no-color)
+			nocolor=1
+			;;
+		*)
+			packages+=("$1")
+	esac
+	shift
+done
+
+for package in "${packages[@]}"; do
+	mapfile -t data < <(curl -s "${url_prefix}${package}" | jq -r "$jqprog")
+
+	for ((i=0; i<${#keys[@]}; i++)); do
+		wrap () {
+			fold -w "$(( $(tput cols) - 18 ))" -s <<< "$*"
+		}
+		pretty_print () {
+			first=1
+			wrap "$*" | while read -r line; do
+				if (( $first )); then
+					printf '%s\n' "$line"
+					first=0
+				else
+					printf '%18s%s\n' ' ' "$line"
+				fi
+			done
+		}
+
+		if (( $nocolor )); then
+			printf '%-16s: ' "${keys[$i]}"
+
+			pretty_print "${data[$i]:-None}"
+		else
+			bold=$(tput bold)
+			normal=$(tput sgr0)
+			printf '%s%-16s:%s ' "$bold" "${keys[$i]}" "$normal"
+
+			pretty_print "${data[$i]:-None}"
+		fi
+	done
+done
