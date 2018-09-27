@@ -1,0 +1,106 @@
+# AUR Scripts
+
+These are just scripts I use to make building AUR packages more convenient. Use
+case is as you would expect: fetch a PKGBUILD by cloning a git repo, then
+run makepkg.
+
+## Warning
+
+These scripts have to do with installing packages to your system. Never trust
+scripts from the Internet with that purpose unless you have personally vetted
+them thoroughly and find that they do what you expect.
+
+I wrote these scripts with a very specific use case in mind: my own use case. I
+started with simply doing everything manually, then automated out only the parts
+I was comfortable with automating. I take steps to ensure my system's safety,
+but this is only apparent in my workflow as a whole. I don't find it hard to
+imagine someone else using these exact same scripts and somehow putting their
+system at risk simply because of a workflow mismatch.
+
+That said, I see a value in making these scripts public. Perhaps one can learn
+to script their own AUR workflow from this repo. Perhaps one can yank out bits
+and pieces for their own use. Perhaps one even has a similar workflow to mine,
+taking the same care with interacting with the AUR as I do, and so can use these
+scripts for convenience.
+
+I leave it to the user's good judgment. **Caveat emptor.**
+
+## Pre-installation
+
+These scripts are designed to work on an Arch Linux system.
+
+The scripts require the following dependencies to work properly:
+
+- bash
+- env
+- coreutils
+- git (for `aurget`, `aurupdate`, and `aurclean`)
+- makepkg (for `aurinstall`)
+- less (for `aurinstall`)
+- curl (for `aurquery` and `aursearch`)
+- jq (for `aurquery` and `aursearch`)
+- tput (for `aurquery` and `aursearch`)
+
+## Installation
+
+Copy or link the scripts to somewhere in your `PATH`.
+
+## Usage
+
+### Searching for Packages
+
+A simple `aursearch <keyword>` will send a search query to the AUR's RPC
+interface.
+
+Hint: it takes a `-q`/`--quiet` flag that acts in the same way as pacman's own
+`-q`/`--quiet` flag when running `pacman -Ssq` or `pacman -Qsq`. Fancy example:
+`aurget "$(aursearch -q <keyword> | fzf)"` to choose a package to fetch with a
+fuzzy finder.
+
+`aurquery <package> ...` will send an info query to the AUR's RPC interface.
+It has more detailed output, similar to `pacman -Si` or `pacman -Qi`.
+
+### Installing Packages
+
+`aurget <package> ...` will clone the git repo(s) from the AUR to `$AUR_DIR`
+(defaults to `~/.aur`). This ought to fetch the PKGBUILD, to prepare for
+installation.
+
+`aurinstall <package> ...` will display the PKGBUILD in a pager for inspection,
+then runs makepkg. Hint: default pager invocation is `less -K`, so you can press
+`q` to quit normally and proceed with installation, or press `ctrl-c` to abort
+(e.g. to prevent running a bad PKGBUILD).
+
+Hint: `aurinstall --asdeps <package> ...` passes the `--asdeps` flag to makepkg
+(which is in turn passed to pacman). This might prove useful in the case of
+installing packages only to fulfill dependencies, so they can automatically be
+removed by `pacman -Rs`, or properly detected as orphans by `pacman -Qtd`.
+
+### Maintaining Packages
+
+`aurupdate <package> ...` will simply run `git fetch` in the corresponding git
+repo(s), display any new commits on the remote, then attempt a `git merge`. If
+any new commits are displayed, a simple `aurinstall <package> ...` can be run to
+rebuild the package.
+
+`aurclean <package> ...` will clean up any untracked files such as source
+tarballs and built packages, if freeing up disk space is ever needed.
+
+### Uninstalling Packages
+
+Packages are installed with the traditional `pacman -U` invocation from makepkg,
+so uninstallation is done with `pacman -Rns <package> ...`.
+
+`aurremove <package> ...` will simply delete the corresponding git repo(s) from
+`$AUR_DIR`. No package management operations are run; this is simply for
+housekeeping.
+
+## Licensing
+
+This project is free and open source software, licensed under the MIT license.
+You are free to use, modify, and redistribute this software.
+
+See `LICENSE` for the full text. Also, take a look at [Github's Choose a License
+page][1] for a nice, short explanation.
+
+[1]: https://choosealicense.com/licenses/mit/
