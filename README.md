@@ -96,12 +96,28 @@ so uninstallation is done with `pacman -Rns <package> ...`, as expected.
 `$AUR_DIR`. No package management operations are run; this is simply for
 housekeeping.
 
+## Other Usage
+
+### Convenience Shell Functions
+
+In some cases, the installation, update, and uninstallation steps are
+straightforward enough that almost no manual intervention between each script is
+necessary. A few convenience shell functions can really enhance the experience
+in these cases: see [this Gist][convenience-functions].
+
+### Shell Completion
+
+I personally use zsh, so I have some simple completion widgets for some of the
+scripts: see [this Gist][completion].
+
 ## Licensing
 
 This project is free and open source software, licensed under the MIT license.
 You are free to use, modify, and redistribute this software.
 
 See `LICENSE` for the full text. Also, take a look at [Github's Choose a License
-page][1] for a nice, short explanation.
+page][license] for a nice, short explanation.
 
-[1]: https://choosealicense.com/licenses/mit/
+[license]: https://choosealicense.com/licenses/mit/
+[convenience-functions]: https://gist.github.com/igemnace/c5033db29fb79df975d679bc47476dbb
+[completion]: https://gist.github.com/igemnace/351dbc1d9cd7a0a3ae100df1c0cf20d5
