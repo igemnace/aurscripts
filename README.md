@@ -67,14 +67,15 @@ It has more detailed output, similar to `pacman -Si` or `pacman -Qi`.
 installation.
 
 `aurinstall <package> ...` will display the PKGBUILD in a pager for inspection,
-then runs makepkg. Hint: default pager invocation is `less -K`, so you can press
+then run makepkg. Hint: default pager invocation is `less -K`, so you can press
 `q` to quit normally and proceed with installation, or press `ctrl-c` to abort
 (e.g. to prevent running a bad PKGBUILD).
 
-Hint: `aurinstall --asdeps <package> ...` passes the `--asdeps` flag to makepkg
-(which is in turn passed to pacman). This might prove useful in the case of
-installing packages only to fulfill dependencies, so they can automatically be
-removed by `pacman -Rs`, or properly detected as orphans by `pacman -Qtd`.
+Hint: `aurinstall --asdeps <package> ...` will pass the `--asdeps` flag to
+makepkg (which will pass it, in turn, to pacman). This might prove useful in the
+case of installing packages only to fulfill dependencies, so they can
+automatically be removed by `pacman -Rs`, or properly detected as orphans by
+`pacman -Qtd`.
 
 ### Maintaining Packages
 
@@ -84,12 +85,12 @@ any new commits are displayed, a simple `aurinstall <package> ...` can be run to
 rebuild the package.
 
 `aurclean <package> ...` will clean up any untracked files such as source
-tarballs and built packages, if freeing up disk space is ever needed.
+tarballs and built packages, if freeing up disk space is a concern.
 
 ### Uninstalling Packages
 
 Packages are installed with the traditional `pacman -U` invocation from makepkg,
-so uninstallation is done with `pacman -Rns <package> ...`.
+so uninstallation is done with `pacman -Rns <package> ...`, as expected.
 
 `aurremove <package> ...` will simply delete the corresponding git repo(s) from
 `$AUR_DIR`. No package management operations are run; this is simply for
