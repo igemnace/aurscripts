@@ -4,9 +4,12 @@ url_prefix='https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
 jqprog='.results[0] | .Name, .Version, .Description, .URL,
 (.License, .Provides, .Depends, .MakeDepends,
 .OptDepends, .Conflicts, .Replaces |
-	. // [] | join(" "))'
+	. // [] | join("  ")),
+.Maintainer, (.FirstSubmitted, .LastModified |
+	strftime("%a %e %b %Y %r %Z"))'
 keys=(Name Version Description URL Licenses Provides 'Depends On'
-	'Make Deps' 'Optional Deps' 'Conflicts With' 'Replaces')
+	'Make Deps' 'Optional Deps' 'Conflicts With' 'Replaces'
+	Maintainer 'First Submitted' 'Last Modified')
 
 nocolor=0
 packages=()
@@ -56,4 +59,6 @@ for package in "${packages[@]}"; do
 			pretty_print "${data[$i]:-None}"
 		fi
 	done
+
+	printf '\n'
 done
