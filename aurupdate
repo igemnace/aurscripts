@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 
 echoerr() {
-  1>&2 echo aurupdate: "$@"
+	1>&2 echo aurupdate: "$@"
 }
 
 silent=0
 packages=()
 
 while (( $# )); do
-  case "$1" in
-    -s|--silent)
-      silent=1
-      ;;
-    *)
-      packages+=("$1")
-  esac
-  shift
+	case "$1" in
+		-s|--silent)
+			silent=1
+			;;
+		*)
+			packages+=("$1")
+	esac
+	shift
 done
 
 for package in "${packages[@]}"; do
-  echoerr "Updating $package..."
-  (
-    cd "${AUR_DIR:-$HOME/.aur}/$package" || {
-      echoerr Cannot chdir. Aborting.
-      exit 1
-    }
+	echoerr "Updating $package..."
+	(
+		cd "${AUR_DIR:-$HOME/.aur}/$package" || {
+			echoerr Cannot chdir. Aborting.
+			exit 1
+		}
 
-    git fetch || { echoerr Aborting.; exit 1; }
+		git fetch || { echoerr Aborting.; exit 1; }
 
-    if ! (( silent )); then
-      git log --oneline '@..@{u}'
-    fi
+		if ! (( silent )); then
+			git log --oneline '@..@{u}'
+		fi
 
-    git merge || {
-      echoerr "Update failed for $package. Cleaning up..."
-      git merge --abort
-      exit 1
-    }
-  )
+		git merge || {
+			echoerr "Update failed for $package. Cleaning up..."
+			git merge --abort
+			exit 1
+		}
+	)
 done

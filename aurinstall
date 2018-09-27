@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 
 echoerr() {
-  1>&2 echo aurinstall: "$@"
+	1>&2 echo aurinstall: "$@"
 }
 
 pager() {
-  if [[ -n $PAGER ]]; then
-    "$PAGER" "$@"
-  else
-    # use -K flag to allow aborting with CTRL-C
-    less -K "$@"
-  fi
+	if [[ -n $PAGER ]]; then
+		"$PAGER" "$@"
+	else
+		# use -K flag to allow aborting with CTRL-C
+		less -K "$@"
+	fi
 }
 
 packages=()
 asdeps=0
 
 for arg in "$@"; do
-  if [[ $arg == '--asdeps' ]]; then
-    asdeps=1
-  else
-    packages+=("$arg")
-  fi
+	if [[ $arg == '--asdeps' ]]; then
+		asdeps=1
+	else
+		packages+=("$arg")
+	fi
 done
 
 for package in "${packages[@]}"; do
-  echoerr "Installing $package..."
-  cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
+	echoerr "Installing $package..."
+	cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
 
-  echoerr Inspecting PKGBUILD...
-  pager PKGBUILD || { echoerr Aborting.; break; }
+	echoerr Inspecting PKGBUILD...
+	pager PKGBUILD || { echoerr Aborting.; break; }
 
-  echoerr Running makepkg...
-  if (( asdeps )); then
-    echoerr --asdeps flag provided. Installing as dependency...
-    makepkg -rics --asdeps
-  else
-    makepkg -rics
-  fi
+	echoerr Running makepkg...
+	if (( asdeps )); then
+		echoerr --asdeps flag provided. Installing as dependency...
+		makepkg -rics --asdeps
+	else
+		makepkg -rics
+	fi
 done

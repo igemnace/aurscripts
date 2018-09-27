@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 echoerr() {
-  1>&2 echo aurclean: "$@"
+	1>&2 echo aurclean: "$@"
 }
 
 for package in "$@"; do
-  echoerr "Cleaning up $package..."
-  cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
-  git clean -fxfd || { echoerr Aborting.; break; }
+	echoerr "Cleaning up $package..."
+	cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
+	git clean -fxfd || { echoerr Aborting.; break; }
 done

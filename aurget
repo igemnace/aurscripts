@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 for package in "$@"; do
-  git clone "https://aur.archlinux.org/$package.git" "${AUR_DIR:-$HOME/.aur}/$package"
+	git clone "https://aur.archlinux.org/$package.git" \
+		"${AUR_DIR:-$HOME/.aur}/$package"
 done
 

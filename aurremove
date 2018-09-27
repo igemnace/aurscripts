@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 echoerr() {
-  1>&2 echo aurremove: "$@"
+	1>&2 echo aurremove: "$@"
 }
 
-cd "${AUR_DIR:-$HOME/.aur}" || { echoerr Cannot chdir to AUR_DIR. Aborting.; exit 1; }
+cd "${AUR_DIR:-$HOME/.aur}" ||
+	{ echoerr Cannot chdir to AUR_DIR. Aborting.; exit 1; }
 
 for package in "$@"; do
-  echoerr "Removing $package..."
-  rm -rf "$package" || { echoerr "Skipping $package."; break; }
+	echoerr "Removing $package..."
+	rm -rf "$package" || { echoerr "Skipping $package."; break; }
 done
