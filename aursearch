@@ -27,9 +27,9 @@ jqprog='.results | sort_by(.Name) |
 curl -s "https://aur.archlinux.org/rpc/?v=5&type=search&arg=${keywords[*]}" |
 	jq -r "$jqprog" |
 	while IFS=';' read -r name version description; do
-		if (( $quiet )); then
+		if (( quiet )); then
 			printf '%s\n' "$name"
-		elif (( $nocolor )); then
+		elif (( nocolor )); then
 			printf '%s %s\n    %s\n' "$name" "$version" "$description"
 		else
 			bold=$(tput bold)

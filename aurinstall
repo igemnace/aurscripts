@@ -32,7 +32,7 @@ for package in "${packages[@]}"; do
   pager PKGBUILD || { echoerr Aborting.; break; }
 
   echoerr Running makepkg...
-  if ((asdeps)); then
+  if (( asdeps )); then
     echoerr --asdeps flag provided. Installing as dependency...
     makepkg -rics --asdeps
   else

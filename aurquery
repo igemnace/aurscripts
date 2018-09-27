@@ -38,7 +38,7 @@ for package in "${packages[@]}"; do
 		pretty_print () {
 			first=1
 			wrap "$*" | while read -r line; do
-				if (( $first )); then
+				if (( first )); then
 					printf '%s\n' "$line"
 					first=0
 				else
@@ -47,7 +47,7 @@ for package in "${packages[@]}"; do
 			done
 		}
 
-		if (( $nocolor )); then
+		if (( nocolor )); then
 			printf '%-16s: ' "${keys[$i]}"
 
 			pretty_print "${data[$i]:-None}"

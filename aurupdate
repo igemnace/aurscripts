@@ -23,19 +23,19 @@ for package in "${packages[@]}"; do
   (
     cd "${AUR_DIR:-$HOME/.aur}/$package" || {
       echoerr Cannot chdir. Aborting.
-      break
+      exit 1
     }
 
-    git fetch || { echoerr Aborting.; break; }
+    git fetch || { echoerr Aborting.; exit 1; }
 
-    if ! (( $silent )); then
-      git log --oneline @..@{u}
+    if ! (( silent )); then
+      git log --oneline '@..@{u}'
     fi
 
     git merge || {
       echoerr "Update failed for $package. Cleaning up..."
       git merge --abort
-      break
+      exit 1
     }
   )
 done
