@@ -5,7 +5,7 @@ jqprog='.results[0] | .Name, .Version, .Description, .URL,
 (.License, .Provides, .Depends, .MakeDepends,
 .OptDepends, .Conflicts, .Replaces |
 	. // [] | join("  ")),
-.Maintainer, (.FirstSubmitted, .LastModified |
+(.Maintainer // ""), (.FirstSubmitted, .LastModified |
 	strftime("%a %e %b %Y %r %Z"))'
 keys=(Name Version Description URL Licenses Provides 'Depends On'
 	'Make Deps' 'Optional Deps' 'Conflicts With' 'Replaces'
