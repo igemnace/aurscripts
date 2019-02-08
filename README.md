@@ -69,7 +69,8 @@ installation.
 `aurinstall <package> ...` will display the PKGBUILD in a pager for inspection,
 then run makepkg. Hint: default pager invocation is `less -K`, so you can press
 `q` to quit normally and proceed with installation, or press `ctrl-c` to abort
-(e.g. to prevent running a bad PKGBUILD).
+(e.g. to prevent running a bad PKGBUILD). Also, it's just `less` so usual keys
+like `v` to open in an editor still work and can come in handy.
 
 Hint: `aurinstall --asdeps <package> ...` will pass the `--asdeps` flag to
 makepkg (which will pass it, in turn, to pacman). This might prove useful in the
@@ -94,7 +95,9 @@ so uninstallation is done with `pacman -Rns <package> ...`, as expected.
 
 `aurremove <package> ...` will simply delete the corresponding git repo(s) from
 `$AUR_DIR`. No package management operations are run; this is simply for
-housekeeping.
+housekeeping. Hint: this is just `rm -rf` on the repo (`-r` since it's a
+directory, `-f` to skip confirmation for various artifacts in `.git`). Tread
+lightly. You can easily do something dumb, like `aurremove ../Documents`.
 
 ## Other Usage
 
