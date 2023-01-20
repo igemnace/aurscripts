@@ -32,6 +32,12 @@ for package in "${packages[@]}"; do
 			git log --oneline '@..@{u}'
 		fi
 
+		num_updates=$(git rev-list --count '@..@{u}')
+		if ! (( num_updates )); then
+			echoerr "No updates for $package."
+			exit 2
+		fi
+
 		git merge || {
 			echoerr "Update failed for $package. Cleaning up..."
 			git merge --abort
