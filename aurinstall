@@ -15,13 +15,19 @@ pager() {
 
 packages=()
 asdeps=0
+inspect_updates=0
 
 for arg in "$@"; do
-	if [[ $arg == '--asdeps' ]]; then
-		asdeps=1
-	else
-		packages+=("$arg")
-	fi
+	case "$arg" in
+		--asdeps)
+			asdeps=1
+			;;
+		--inspect-updates)
+			inspect_updates=1
+			;;
+		*)
+			packages+=("$arg")
+	esac
 done
 
 for package in "${packages[@]}"; do
@@ -29,7 +35,26 @@ for package in "${packages[@]}"; do
 	cd "${AUR_DIR:-$HOME/.aur}/$package" || { echoerr Aborting.; break; }
 
 	echoerr Inspecting PKGBUILD...
-	pager PKGBUILD || { echoerr Aborting.; break; }
+	if (( inspect_updates )); then
+		# use pipefail for when any of the sources to inspect have issues
+		set -o pipefail
+		{
+			# updates
+			printf 'Recent History\n'
+			printf '==============\n'
+			# TODO: better if we use the installed version... but how?
+			git log --oneline '@{1}..@'
+			printf '%s <--- Last state\n\n' "$(git log --oneline '@{1}~..@{1}')"
+
+			printf 'PKGBUILD\n'
+			printf '========\n'
+			# PKGBUILD
+			cat PKGBUILD
+		} | pager || { echoerr Aborting.; break; }
+		set +o pipefail
+	else
+		pager PKGBUILD || { echoerr Aborting.; break; }
+	fi
 
 	echoerr Running makepkg...
 	if (( asdeps )); then
